@@ -1,0 +1,77 @@
+<h1>Schedules</h1>
+
+<!-- Technician Names Row -->
+<div id="technician-names" style="display: flex;">
+  <!-- Blank space matching the width of the time column -->
+  <div style="width: 100px;"></div>
+  
+  <!-- One name per technician -->
+  <% @technicians.each do |tech| %>
+    <div class="technician-name" style="flex: 1; text-align: center; background: #f0f0f0; border: 1px solid #ccc; padding: 5px;">
+      <%= tech.name %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Main Schedule Grid -->
+<div id="schedule-grid" style="display: flex;">
+
+  <!-- Left column for time labels -->
+  <div id="time-column" style="width: 100px; border-right: 1px solid #ccc;">
+    <% (@start_hour...@end_hour).each do |hour| %>
+      <div class="time-slot" style="height: 60px; border-bottom: 1px dotted #eee;">
+        <%= hour %>:00
+      </div>
+    <% end %>
+  </div>
+
+  <!-- One column per technician (WITHOUT the name header) -->
+  <% @technicians.each do |tech| %>
+    <div
+      class="technician-column"
+      data-tech-name="<%= tech.name %>"
+      style="flex: 1; position: relative; border-right: 1px solid #ccc;"
+    >
+      
+      <!-- Each hour slot => a clickable area -->
+      <% (@start_hour...@end_hour).each do |hour| %>
+        <div
+          class="clickable-slot"
+          style="height: 60px; border-bottom: 1px dotted #eee;"
+          data-hour="<%= hour %>"
+          data-technician-id="<%= tech.id %>"
+        >
+        </div>
+      <% end %>
+
+      <!-- Render each WorkOrder block -->
+      <% tech.work_orders.each do |wo| %>
+        <% start_hour   = @start_hour %>
+        <% order_hour  = wo.start_time.hour %>
+        <% order_min   = wo.start_time.min %>
+        <% block_top   = (order_hour - start_hour) * 60 + order_min %>
+        <% block_height = wo.duration %>
+
+        <div
+          class="work-order-block"
+          style="
+            position: absolute;
+            left: 0;
+            top: <%= block_top %>px;
+            height: <%= block_height %>px;
+            width: 100%;
+            background-color: #cce5ff;
+            border: 1px solid #004085;
+            box-sizing: border-box;
+            padding: 2px;
+            overflow: hidden;
+          "
+        >
+          <strong><%= wo.location.name %></strong>
+          - <%= wo.location.city %><br>
+          <%= wo.start_time.strftime('%I:%M %p') %> ($<%= wo.price %>)
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
