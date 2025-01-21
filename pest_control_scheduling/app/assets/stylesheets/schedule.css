@@ -1,0 +1,122 @@
+/* ================================
+   GLOBAL / RESET STYLES
+================================ */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif; 
+}
+
+
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* ================================
+   HEADER / TECHNICIAN NAMES ROW
+================================ */
+#technician-names {
+  display: flex;
+  margin-bottom: 0.5rem; 
+}
+
+#technician-names > div {
+  text-align: center;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  padding: 5px;
+}
+
+#technician-names .technician-name {
+  flex: 1;  
+}
+
+/* ================================
+   MAIN SCHEDULE GRID
+================================ */
+#schedule-grid {
+  display: flex;         
+  border-top: 1px solid #ccc;
+}
+
+#time-column {
+  width: 100px;
+  border-right: 1px solid #ccc;
+}
+
+.time-slot {
+  height: 60px; 
+  border-bottom: 1px dotted #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================================
+   TECHNICIAN COLUMNS
+================================ */
+.technician-column {
+  flex: 1;
+  position: relative;
+  border-right: 1px solid #ccc;
+}
+
+
+.technician-header {
+  height: 30px;
+  text-align: center;
+  background: #f0f0f0;
+  font-weight: bold;
+}
+
+/* ================================
+   CLICKABLE TIME SLOTS
+================================ */
+.clickable-slot {
+  height: 60px;
+  border-bottom: 1px dotted #eee;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.clickable-slot:hover {
+  background: #f9f9f9;
+}
+
+/* ================================
+   WORK ORDER BLOCKS
+================================ */
+.work-order-block {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  
+  background-color: #cce5ff;
+  border: 1px solid #004085;
+  box-sizing: border-box;
+  padding: 2px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Overlapping blocks */
+.work-order-block.overlap {
+  background-color: #df6969; 
+  border-color: #ff0000;
+}
+
+/* ================================
+   RESPONSIVENESS
+================================ */
+
+@media (max-width: 768px) {
+  #schedule-grid {
+    overflow-x: auto; 
+  }
+  .technician-column {
+    min-width: 200px; 
+  }
+}
+
+  
