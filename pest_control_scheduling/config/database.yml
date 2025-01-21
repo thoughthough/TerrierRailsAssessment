@@ -12,5 +12,15 @@ test:
   database: pest_control_scheduling_test
 
 production:
+production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= Rails.application.credentials.database_username %>
+  password: <%= Rails.application.credentials.database_password %>
+  url: <%= ENV["DATABASE_URL"] %>
+
+  cable:
+    <<: *default
+    database: pest_control_scheduling_production_cable
