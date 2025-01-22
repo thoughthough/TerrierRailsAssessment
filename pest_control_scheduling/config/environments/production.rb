@@ -69,7 +69,12 @@ Rails.application.configure do
   #   authentication: :plain
   # }
 
+
+  # Disable Action Cable in production
+  config.action_cable.url = nil
   config.action_cable.mount_path = nil
+  config.action_cable.disable_request_forgery_protection = true
+
 
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

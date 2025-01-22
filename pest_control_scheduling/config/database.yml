@@ -13,11 +13,9 @@ test:
 
 production:
   <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
-  username: <%= Rails.application.credentials.database_username %>
-  password: <%= Rails.application.credentials.database_password %>
-
-  # Uncomment this if you're using a separate database for Action Cable
-  # cable:
-  #   <<: *default
-  #   database: pest_control_scheduling_production_cable
+  database: pest_control_scheduling_production
+  username: pset_s_db_user
+  password: HHxwNNvbaI9C2NnNhuW9R3sQgk2PeItG
+  host: localhost
+  port: 5432
+  verbose: true
