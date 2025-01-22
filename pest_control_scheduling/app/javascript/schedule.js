@@ -1,58 +1,56 @@
 console.log("schedule.js is loaded and running");
 
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("Page fully loaded, running overlap detection...");
-    detectOverlaps(); 
-    // Listen for clicks on .clickable-slot
-    document.querySelectorAll(".clickable-slot").forEach((slot) => {
-      slot.addEventListener("click", function() {
-        const hour = parseInt(this.dataset.hour, 10);
-        const technicianId = parseInt(this.dataset.technicianId, 10);
-  
-        // Schedule starts at 6 AM
-        const startHour = 6;
-        // Convert clicked hour to minutes since startHour
-        const clickTime = (hour - startHour) * 60; 
-  
-        // Find the containing column for this technician
-        const column = this.closest(".technician-column");
-  
-        // Track the end of the previous block (previousEnd)
-        // and the start of the next block (nextStart)
-        let previousEnd = 0;        // earliest possible end
-        let nextStart = 24 * 60;    // 1440 minutes (end of day)
-  
-        // For each .work-order-block in this column
-        column.querySelectorAll(".work-order-block").forEach((block) => {
-          // Read inline style. top (start offset) and height (duration)
-          const topPx = parseInt(block.style.top.replace("px", ""), 10);
-          const heightPx = parseInt(block.style.height.replace("px", ""), 10);
-  
-          // The block starts at `topPx` minutes from startHour
-          // and ends at `blockEnd = topPx + heightPx`
-          const blockStart = topPx;
-          const blockEnd   = topPx + heightPx;
-  
-          // If block ends before the clickTime (previous)
-          // see if it's the latest one so far
-          if (blockEnd <= clickTime && blockEnd > previousEnd) {
-            previousEnd = blockEnd;
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("Page fully loaded, running overlap detection...");
+  detectOverlaps();
+
+  document.querySelectorAll(".clickable-slot").forEach((slot) => {
+    slot.addEventListener("click", function () {
+      const hour = parseInt(this.dataset.hour, 10);
+      const technicianId = parseInt(this.dataset.technicianId, 10);
+
+      const startHour = 6;
+      const clickTime = (hour - startHour) * 60;
+
+      const column = this.closest(".technician-column");
+      const blocks = Array.from(column.querySelectorAll(".work-order-block"));
+
+      if (blocks.length === 0) {
+        alert(`No blocks in this column; the entire slot is available.`);
+        return;
+      }
+
+      let previousEnd = 0;
+      let nextStart = 24 * 60;
+
+      blocks
+        .map((block) => {
+          const computedStyle = window.getComputedStyle(block);
+          const topPx = parseInt(computedStyle.top, 10);
+          const heightPx = parseInt(computedStyle.height, 10);
+          return { start: topPx, end: topPx + heightPx };
+        })
+        .sort((a, b) => a.start - b.start)
+        .forEach(({ start, end }) => {
+          if (end <= clickTime && end > previousEnd) {
+            previousEnd = end;
           }
-  
-          // If block starts after the clickTime (next)
-          // see if it's the earliest one so far
-          if (blockStart >= clickTime && blockStart < nextStart) {
-            nextStart = blockStart;
+          if (start >= clickTime && start < nextStart) {
+            nextStart = start;
           }
         });
-  
-        // The available gap is the difference between the end of the previous block
-        // and the start of the next block
+
+      if (clickTime >= previousEnd && clickTime < nextStart) {
+        alert("Click overlaps with an existing block.");
+      } else {
         const available = nextStart - previousEnd;
-        alert(`There are ${available} minutes available in this slot for technician #${technicianId}.`);
-      });
+        alert(
+          `There are ${available} minutes available in this slot for technician #${technicianId}.`
+        );
+      }
     });
   });
+});
 
   function detectOverlaps() {
     console.log("Detecting overlaps...");
