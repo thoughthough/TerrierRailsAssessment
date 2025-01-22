@@ -2,7 +2,6 @@ console.log("schedule.js is loaded and running");
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Page fully loaded, running overlap detection...");
-  detectOverlaps();
 
   document.querySelectorAll(".clickable-slot").forEach((slot) => {
     slot.addEventListener("click", function () {
@@ -23,6 +22,9 @@ document.addEventListener("DOMContentLoaded", function () {
       let previousEnd = 0;
       let nextStart = 24 * 60;
 
+      // Track if click overlaps with any block
+      let overlaps = false;
+
       blocks
         .map((block) => {
           const computedStyle = window.getComputedStyle(block);
@@ -32,6 +34,12 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .sort((a, b) => a.start - b.start)
         .forEach(({ start, end }) => {
+          // Check for overlaps
+          if (clickTime > start && clickTime < end) {
+            overlaps = true;
+          }
+
+          // Update previousEnd and nextStart for gap calculation
           if (end <= clickTime && end > previousEnd) {
             previousEnd = end;
           }
@@ -40,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         });
 
-      if (clickTime >= previousEnd && clickTime < nextStart) {
+      if (overlaps) {
         alert("Click overlaps with an existing block.");
       } else {
         const available = nextStart - previousEnd;
@@ -51,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
 
   function detectOverlaps() {
     console.log("Detecting overlaps...");
