@@ -12,5 +12,28 @@ test:
   <<: *default
 
 production:
-  database: cache
+  # database: cache
   <<: *default
+
+# development:
+#   store: memory_store
+
+# test:
+#   store: null_store
+
+# production:
+#   store: memory_store
+#   # Uncomment the database line when you set up caching in production:
+#   database: pest_control_scheduling_production_cache
+
+# development:
+#   adapter: memory_store
+
+# test:
+#   adapter: null_store
+
+# production:
+#   adapter: memory_store
+#   # Uncomment and configure the database option when ready to use SolidCache:
+#   # adapter: solid_cache
+#   # database: pest_control_scheduling_production_cache

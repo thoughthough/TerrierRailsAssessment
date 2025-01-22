@@ -19,3 +19,11 @@ production:
   host: localhost
   port: 5432
   verbose: true
+
+  cable:
+    <<: *default
+    database: pest_control_scheduling_production_cable
+    username: pset_s_db_user
+    password: HHxwNNvbaI9C2NnNhuW9R3sQgk2PeItG
+    host: localhost
+    port: 5432

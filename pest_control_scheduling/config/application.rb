@@ -6,6 +6,7 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+
 module PestControlScheduling
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -23,5 +24,12 @@ module PestControlScheduling
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    # Action Cable configuration
+    config.action_cable.mount_path = '/cable' # Adjust path if necessary
+    config.action_cable.url = ENV['CABLE_URL'] || 'ws://localhost:3000/cable' # Production will override with correct ENV
+    config.action_cable.allowed_request_origins = [
+      'http://localhost:3000',
+      /http:\/\/.*\.yourdomain\.com/,
+    ]
   end
 end
